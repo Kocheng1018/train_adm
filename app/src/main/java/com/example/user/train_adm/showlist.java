@@ -1,13 +1,17 @@
 package com.example.user.train_adm;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +32,8 @@ import java.util.concurrent.ExecutionException;
 
 public class showlist extends AppCompatActivity {
 
+    private static int check_status = -1;
+
     List<String> start = new ArrayList<>();
     List<String> end = new ArrayList<>();
     List<String> name = new ArrayList<>();
@@ -39,12 +45,15 @@ public class showlist extends AppCompatActivity {
     List<String> notice = new ArrayList<>();
     List<String> seat = new ArrayList<>();
     List<String> time = new ArrayList<>();
+    List<String> num = new ArrayList<>();
     List<String> titlemix = new ArrayList<>();
     List<String> mix = new ArrayList<>();
 
+    ArrayAdapter adapter;
     ListView record;
     TextView detail;
-    String date, Career, key;
+    String date, Career, key, code, statusnum;
+    Button status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +62,15 @@ public class showlist extends AppCompatActivity {
 
         record = findViewById(R.id.record);
         detail = findViewById(R.id.detail);
+        status = findViewById(R.id.finish);
 
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("yyyy-MM-dd");
         date = simpleDateFormatDate.format(new java.util.Date());
 
         Career = getSharedPreferences("name",MODE_PRIVATE)
                 .getString("Career", "");
+        code = getSharedPreferences("name",MODE_PRIVATE)
+                .getString("code", "");
 
         if(Career.equals("train")){
             key = "catchtrain";
@@ -71,11 +83,29 @@ public class showlist extends AppCompatActivity {
         record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
+                check_status = position;
                 detail.setText(name.get(position) + sex.get(position));
                 detail.setText(mix.get(position));
+                statusnum = num.get(position);
             }
         });
 
+        status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
+                aa.setTitle("確認視窗");
+                aa.setMessage("確定刪除此訂單");
+                aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        statuscheck();
+                    }
+                });
+                aa.show();
+            }
+
+        });
     }
 
     //連線
@@ -126,11 +156,14 @@ public class showlist extends AppCompatActivity {
                     + "=" + URLEncoder.encode(key,"UTF8");
             datas += "&" + URLEncoder.encode("date", "UTF-8")
                     + "=" + URLEncoder.encode(date, "UTF-8");
-            String result = dbConnector.execute("action",datas).get();
+            datas += "&" + URLEncoder.encode("code", "UTF-8")
+                    + "=" + URLEncoder.encode(code, "UTF-8");
+            String result = dbConnector.execute("actionadm",datas).get();
             JSONArray records = new JSONArray(result);
             for (int i = 0;i < records.length(); i++){
                 JSONObject record = records.getJSONObject(i);
 
+                num.add(record.getString("num"));
                 time.add(record.getString("time"));
                 start.add(record.getString("start"));
                 end.add(record.getString("end"));
@@ -192,17 +225,62 @@ public class showlist extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ArrayAdapter adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
+        adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
         record.setAdapter(adapter);
 
     }
-        private String format(String x, int y) {
-            String s = "" + x;
-            while (s.length() <= y){
-                s = "  " + s;
-            }
-            return s;
-        }
 
+    public void statuscheck() {
+        DBConnector dbConnector = new DBConnector();
+        String datas = null;
+        try {
+            datas = URLEncoder.encode("key","UTF8")
+                    + "=" + URLEncoder.encode("statuscheck","UTF8");
+            datas += "&" + URLEncoder.encode("num", "UTF-8")
+                    + "=" + URLEncoder.encode(statusnum, "UTF-8");
+            String result = dbConnector.execute("actionadm",datas).get();
+
+            JSONObject record = new JSONObject(result);
+
+                if (record.getString("code").equals("1")) {
+                    start.remove(check_status);
+                    end.remove(check_status);
+                    name.remove(check_status);
+                    sex.remove(check_status);
+                    wheel.remove(check_status);
+                    crutch.remove(check_status);
+                    board.remove(check_status);
+                    travelhelp.remove(check_status);
+                    notice.remove(check_status);
+                    seat.remove(check_status);
+                    time.remove(check_status);
+                    titlemix.remove(check_status);
+                    mix.remove(check_status);
+                    adapter.notifyDataSetChanged();
+                    detail.setText("此訂單已完成!");
+                    check_status = -1;
+                } else {
+                    Toast tosat = Toast.makeText(showlist.this, "Error!", Toast.LENGTH_SHORT);
+                    tosat.show();
+                }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String format(String x, int y) {
+        String s = "" + x;
+        while (s.length() <= y){
+            s = "  " + s;
+        }
+        return s;
+    }
 
 }

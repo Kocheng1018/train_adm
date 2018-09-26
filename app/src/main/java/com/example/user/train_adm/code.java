@@ -33,7 +33,7 @@ public class code extends AppCompatActivity {
         if(Career.equals("train")){
             TXT.setText("請輸入車次代碼");
         }else if(Career.equals("station")){
-            TXT.setText("請輸入車站代碼");
+            TXT.setText("請輸入車站名稱");
         }else {
             TXT.setText("ERROR");
         }
