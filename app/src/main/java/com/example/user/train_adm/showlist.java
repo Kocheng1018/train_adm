@@ -93,16 +93,27 @@ public class showlist extends AppCompatActivity {
         status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
-                aa.setTitle("確認視窗");
-                aa.setMessage("確定刪除此訂單");
-                aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        statuscheck();
-                    }
-                });
-                aa.show();
+                if(check_status != -1){
+                    AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
+                    aa.setTitle("確認視窗");
+                    aa.setMessage("確定刪除此訂單");
+                    aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            statuscheck();
+                        }
+                    });
+                    aa.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    aa.show();
+                }else {
+                    Toast toast = Toast.makeText(showlist.this, "請點選訂單", Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
 
         });
