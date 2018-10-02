@@ -1,6 +1,8 @@
 package com.example.user.train_adm;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -53,7 +55,7 @@ public class showlist extends AppCompatActivity {
     ListView record;
     TextView detail;
     String date, Career, key, code, statusnum;
-    Button status;
+    Button status,backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class showlist extends AppCompatActivity {
         record = findViewById(R.id.record);
         detail = findViewById(R.id.detail);
         status = findViewById(R.id.finish);
+        backbtn = findViewById(R.id.backbtn);
 
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("yyyy-MM-dd");
         date = simpleDateFormatDate.format(new java.util.Date());
@@ -80,6 +83,14 @@ public class showlist extends AppCompatActivity {
 
         Dataget();
 
+        backbtn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                backpage();
+            }
+        });
+
         record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -93,16 +104,27 @@ public class showlist extends AppCompatActivity {
         status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
-                aa.setTitle("確認視窗");
-                aa.setMessage("確定刪除此訂單");
-                aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        statuscheck();
-                    }
-                });
-                aa.show();
+                if(check_status != -1){
+                    AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
+                    aa.setTitle("確認視窗");
+                    aa.setMessage("確定刪除此訂單");
+                    aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            statuscheck();
+                        }
+                    });
+                    aa.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    aa.show();
+                }else {
+                    Toast toast = Toast.makeText(showlist.this, "請點選訂單", Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
 
         });
@@ -176,45 +198,44 @@ public class showlist extends AppCompatActivity {
 
                 wheel.add(record.getString("wheel"));
                 if(wheel.get(i).equals("1"))
-                    wheel.set(i,"輪椅");
+                    wheel.set(i,"輪椅\n");
                 else
                     wheel.set(i,"");
 
                 crutch.add(record.getString("crutch"));
                 if(crutch.get(i).equals("1"))
-                    crutch.set(i,"拐杖");
+                    crutch.set(i,"拐杖\n");
                 else
                     crutch.set(i,"");
 
                 board.add(record.getString("board"));
                 if(board.get(i).equals("1"))
-                    board.set(i,"鍍板");
+                    board.set(i,"鍍板\n");
                 else
                     board.set(i,"");
 
                 travelhelp.add(record.getString("travelhelp"));
                 if(travelhelp.get(i).equals("1"))
-                    travelhelp.set(i,"乘車提醒");
+                    travelhelp.set(i,"乘車提醒\n");
                 else
                     travelhelp.set(i,"");
 
                 notice.add(record.getString("notice"));
                 if(notice.get(i).equals("1"))
-                    notice.set(i,"下車提醒");
+                    notice.set(i,"下車提醒\n");
                 else
                     notice.set(i,"");
 
                 seat.add(record.getString("seat"));
                 if(seat.get(i).equals("1"))
-                    seat.set(i,"博愛座");
+                    seat.set(i,"博愛座\n");
                 else
                     seat.set(i,"");
 
                 titlemix.add(format(time.get(i),4) + " " + format(start.get(i),4) + " " + format(end.get(i),4) + " " + format(name.get(i),4) + " " + sex.get(i));
-                mix.add(wheel.get(i) + "\n" + crutch.get(i) + "\n" + board.get(i) + "\n" + travelhelp.get(i) + "\n" + notice.get(i) + "\n" + seat.get(i));
+                mix.add(wheel.get(i) + crutch.get(i) + board.get(i) + travelhelp.get(i) + notice.get(i) + seat.get(i));
 
             }
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -227,7 +248,6 @@ public class showlist extends AppCompatActivity {
 
         adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
         record.setAdapter(adapter);
-
     }
 
     public void statuscheck() {
@@ -281,6 +301,13 @@ public class showlist extends AppCompatActivity {
             s = "  " + s;
         }
         return s;
+    }
+    public void backpage() {
+        Intent intent = new Intent(this,code.class);
+        startActivity(intent);
+        SharedPreferences name = getSharedPreferences(code,MODE_PRIVATE);
+        name.edit().putString(code,"");
+        finish();
     }
 
 }
