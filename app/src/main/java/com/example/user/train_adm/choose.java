@@ -41,5 +41,6 @@ public class choose extends AppCompatActivity {
     public void pageup() {
         Intent intent = new Intent(this,code.class);
         startActivity(intent);
+        finish();
     }
 }

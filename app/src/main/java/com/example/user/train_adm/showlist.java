@@ -1,13 +1,17 @@
 package com.example.user.train_adm;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +32,8 @@ import java.util.concurrent.ExecutionException;
 
 public class showlist extends AppCompatActivity {
 
+    private static int check_status = -1;
+
     List<String> start = new ArrayList<>();
     List<String> end = new ArrayList<>();
     List<String> name = new ArrayList<>();
@@ -39,12 +45,15 @@ public class showlist extends AppCompatActivity {
     List<String> notice = new ArrayList<>();
     List<String> seat = new ArrayList<>();
     List<String> time = new ArrayList<>();
+    List<String> num = new ArrayList<>();
     List<String> titlemix = new ArrayList<>();
     List<String> mix = new ArrayList<>();
 
+    ArrayAdapter adapter;
     ListView record;
     TextView detail;
-    String date, Career, key;
+    String date, Career, key, code, statusnum;
+    Button status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +62,15 @@ public class showlist extends AppCompatActivity {
 
         record = findViewById(R.id.record);
         detail = findViewById(R.id.detail);
+        status = findViewById(R.id.finish);
 
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("yyyy-MM-dd");
         date = simpleDateFormatDate.format(new java.util.Date());
 
         Career = getSharedPreferences("name",MODE_PRIVATE)
                 .getString("Career", "");
+        code = getSharedPreferences("name",MODE_PRIVATE)
+                .getString("code", "");
 
         if(Career.equals("train")){
             key = "catchtrain";
@@ -71,11 +83,40 @@ public class showlist extends AppCompatActivity {
         record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
+                check_status = position;
                 detail.setText(name.get(position) + sex.get(position));
                 detail.setText(mix.get(position));
+                statusnum = num.get(position);
             }
         });
 
+        status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(check_status != -1){
+                    AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
+                    aa.setTitle("確認視窗");
+                    aa.setMessage("確定刪除此訂單");
+                    aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            statuscheck();
+                        }
+                    });
+                    aa.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    aa.show();
+                }else {
+                    Toast toast = Toast.makeText(showlist.this, "請點選訂單", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+
+        });
     }
 
     //連線
@@ -126,7 +167,9 @@ public class showlist extends AppCompatActivity {
                     + "=" + URLEncoder.encode(key,"UTF8");
             datas += "&" + URLEncoder.encode("date", "UTF-8")
                     + "=" + URLEncoder.encode(date, "UTF-8");
-            String result = dbConnector.execute("action",datas).get();
+            datas += "&" + URLEncoder.encode("code", "UTF-8")
+                    + "=" + URLEncoder.encode(code, "UTF-8");
+            String result = dbConnector.execute("actionadm",datas).get();
             JSONArray records = new JSONArray(result);
             for (int i = 0;i < records.length(); i++){
                 JSONObject record = records.getJSONObject(i);
