@@ -13,8 +13,12 @@ import android.widget.TextView;
 
 public class code extends AppCompatActivity {
 
+<<<<<<< HEAD
     String Career;
     ImageView imageView2;
+=======
+    String Career, codenum;
+>>>>>>> 9a7b3d56cb32cb0c4f24fd21aa5adac0af5304aa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +71,15 @@ public class code extends AppCompatActivity {
         startActivity(intent);
     }
     public void pageup() {
+<<<<<<< HEAD
             Intent intent = new Intent(this,choose.class);
             startActivity(intent);
             finish();
+=======
+        Intent intent = new Intent(this,choose.class);
+        startActivity(intent);
+        finish();
+>>>>>>> 9a7b3d56cb32cb0c4f24fd21aa5adac0af5304aa
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
