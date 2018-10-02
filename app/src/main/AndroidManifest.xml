@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".choose"
+        <activity
+            android:name=".choose"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +22,7 @@
         </activity>
         <activity android:name=".showlist" />
         <activity android:name=".code" />
+        <activity android:name=".station"></activity>
     </application>
 
 </manifest>

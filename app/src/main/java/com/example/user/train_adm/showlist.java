@@ -82,12 +82,18 @@ public class showlist extends AppCompatActivity {
         }
 
         Dataget();
+        detail.setText(Career);
+        detail.append(code);
+        detail.append(date);
 
         backbtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                backpage();
+                if(key.equals("catchtrain"))
+                    backpage();
+                else if (key.equals("catchstation"))
+                    backpage1();
             }
         });
 
@@ -310,4 +316,11 @@ public class showlist extends AppCompatActivity {
         finish();
     }
 
+    public void backpage1() {
+        Intent intent = new Intent(this,station.class);
+        startActivity(intent);
+        SharedPreferences name = getSharedPreferences(code,MODE_PRIVATE);
+        name.edit().putString(code,"");
+        finish();
+    }
 }

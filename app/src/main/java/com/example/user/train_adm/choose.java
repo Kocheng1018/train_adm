@@ -22,9 +22,9 @@ public class choose extends AppCompatActivity {
         trainbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
-                    name.edit().putString("Career","train").commit();
-                    pageup();
+                SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
+                name.edit().putString("Career","train").commit();
+                pageup();
             }
         });
         stationbtn.setOnClickListener(new View.OnClickListener() {
@@ -32,13 +32,18 @@ public class choose extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
                 name.edit().putString("Career","station").commit();
-                pageup();
+                pageup1();
 
             }
         });
     }
     public void pageup() {
         Intent intent = new Intent(this,code.class);
+        startActivity(intent);
+        finish();
+    }
+    public void pageup1() {
+        Intent intent = new Intent(this,station.class);
         startActivity(intent);
         finish();
     }

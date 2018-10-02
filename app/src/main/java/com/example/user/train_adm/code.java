@@ -13,12 +13,8 @@ import android.widget.TextView;
 
 public class code extends AppCompatActivity {
 
-<<<<<<< HEAD
     String Career;
     ImageView imageView2;
-=======
-    String Career, codenum;
->>>>>>> 9a7b3d56cb32cb0c4f24fd21aa5adac0af5304aa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +31,8 @@ public class code extends AppCompatActivity {
         TXT = findViewById(R.id.TXT);
         imageView2 =findViewById(R.id.imageView2);
 
-        Career = getSharedPreferences("name",MODE_PRIVATE)
-                .getString("Career","");
-
-        if(Career.equals("train")){
-            TXT.setText("請輸入車次代碼");
-            imageView2.setImageResource(R.drawable.trainimage);
-        }else if(Career.equals("station")){
-            TXT.setText("請輸入車站名稱");
-            imageView2.setImageResource(R.drawable.stationimage);
-        }else {
-            TXT.setText("ERROR");
-        }
+        TXT.setText("請輸入車次代碼");
+        imageView2.setImageResource(R.drawable.trainimage);
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,23 +49,17 @@ public class code extends AppCompatActivity {
                 pageup();
             }
         });
-
     }
 
     public void pagedowm() {
         Intent intent = new Intent(this,showlist.class);
         startActivity(intent);
     }
+
     public void pageup() {
-<<<<<<< HEAD
             Intent intent = new Intent(this,choose.class);
             startActivity(intent);
             finish();
-=======
-        Intent intent = new Intent(this,choose.class);
-        startActivity(intent);
-        finish();
->>>>>>> 9a7b3d56cb32cb0c4f24fd21aa5adac0af5304aa
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
