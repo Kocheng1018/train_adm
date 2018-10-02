@@ -131,6 +131,7 @@ public class showlist extends AppCompatActivity {
             for (int i = 0;i < records.length(); i++){
                 JSONObject record = records.getJSONObject(i);
 
+                num.add(record.getString("num"));
                 time.add(record.getString("time"));
                 start.add(record.getString("start"));
                 end.add(record.getString("end"));
@@ -192,17 +193,62 @@ public class showlist extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ArrayAdapter adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
+        adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
         record.setAdapter(adapter);
 
     }
-        private String format(String x, int y) {
-            String s = "" + x;
-            while (s.length() <= y){
-                s = "  " + s;
-            }
-            return s;
-        }
 
+    public void statuscheck() {
+        DBConnector dbConnector = new DBConnector();
+        String datas = null;
+        try {
+            datas = URLEncoder.encode("key","UTF8")
+                    + "=" + URLEncoder.encode("statuscheck","UTF8");
+            datas += "&" + URLEncoder.encode("num", "UTF-8")
+                    + "=" + URLEncoder.encode(statusnum, "UTF-8");
+            String result = dbConnector.execute("actionadm",datas).get();
+
+            JSONObject record = new JSONObject(result);
+
+                if (record.getString("code").equals("1")) {
+                    start.remove(check_status);
+                    end.remove(check_status);
+                    name.remove(check_status);
+                    sex.remove(check_status);
+                    wheel.remove(check_status);
+                    crutch.remove(check_status);
+                    board.remove(check_status);
+                    travelhelp.remove(check_status);
+                    notice.remove(check_status);
+                    seat.remove(check_status);
+                    time.remove(check_status);
+                    titlemix.remove(check_status);
+                    mix.remove(check_status);
+                    adapter.notifyDataSetChanged();
+                    detail.setText("此訂單已完成!");
+                    check_status = -1;
+                } else {
+                    Toast tosat = Toast.makeText(showlist.this, "Error!", Toast.LENGTH_SHORT);
+                    tosat.show();
+                }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String format(String x, int y) {
+        String s = "" + x;
+        while (s.length() <= y){
+            s = "  " + s;
+        }
+        return s;
+    }
 
 }
