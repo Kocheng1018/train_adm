@@ -14,10 +14,11 @@ public class choose extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
 
-        Button trainbtn,stationbtn;
+        Button trainbtn,stationbtn,htmlbtn;
 
         trainbtn = findViewById(R.id.trainbtn);
         stationbtn = findViewById(R.id.stationbtn);
+        htmlbtn = findViewById(R.id.html);
 
         trainbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +35,15 @@ public class choose extends AppCompatActivity {
                 name.edit().putString("Career","station").commit();
                 pageup1();
 
+            }
+        });
+        htmlbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();   //intent實體化
+                intent.setClass(choose.this, php.class);
+                startActivity(intent);    //startActivity觸發換頁
+                finish();
             }
         });
     }

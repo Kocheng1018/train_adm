@@ -7,11 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,32 +31,28 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class showlist extends AppCompatActivity {
 
     private static int check_status = -1;
 
-    List<String> start = new ArrayList<>();
-    List<String> end = new ArrayList<>();
-    List<String> name = new ArrayList<>();
-    List<String> sex = new ArrayList<>();
     List<String> wheel = new ArrayList<>();
     List<String> crutch  = new ArrayList<>();
     List<String> board = new ArrayList<>();
     List<String> travelhelp = new ArrayList<>();
     List<String> notice = new ArrayList<>();
-    List<String> seat = new ArrayList<>();
-    List<String> time = new ArrayList<>();
     List<String> num = new ArrayList<>();
-    List<String> titlemix = new ArrayList<>();
+    List<String> seat = new ArrayList<>();
+    List<Map<String, Object>> titlemix = new ArrayList();
     List<String> mix = new ArrayList<>();
-
-    ArrayAdapter adapter;
+    SimpleAdapter adapter;
     ListView record;
     TextView detail;
-    String date, Career, key, code, statusnum;
+    String date, Career, key, code;
     Button status,backbtn;
 
     @Override
@@ -67,24 +65,53 @@ public class showlist extends AppCompatActivity {
         status = findViewById(R.id.finish);
         backbtn = findViewById(R.id.backbtn);
 
+        detail.setMovementMethod(new ScrollingMovementMethod());
+
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("yyyy-MM-dd");
         date = simpleDateFormatDate.format(new java.util.Date());
 
         Career = getSharedPreferences("name",MODE_PRIVATE)
                 .getString("Career", "");
-        code = getSharedPreferences("name",MODE_PRIVATE)
-                .getString("code", "");
+
 
         if(Career.equals("train")){
             key = "catchtrain";
+            code = getSharedPreferences("name",MODE_PRIVATE)
+                    .getString("train_code", "");
         }else if(Career.equals("station")){
             key = "catchstation";
+            code = getSharedPreferences("name",MODE_PRIVATE)
+                    .getString("code", "");
+        }
+        adapter = new SimpleAdapter(this,Dataget(),
+                R.layout.db_service,
+                new String[] {"time","start","end","client"},
+                new int[] {R.id.time,R.id.start,R.id.end,R.id.client});
+        record.setAdapter(adapter);
+
+        if(num.size() == 0){
+            new AlertDialog.Builder(showlist.this)
+                    .setTitle("確認視窗")
+                    .setMessage("無服務需求!")
+                    .setPositiveButton("確定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,int which) {
+                                    if(Career.equals("train")){
+                                        Intent myIntent = new Intent();
+                                        myIntent = new Intent(showlist.this,code.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                    }else{
+                                        Intent myIntent = new Intent();
+                                        myIntent = new Intent(showlist.this,station.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                    }
+                                }
+                            }).show().setCancelable(false);
         }
 
-        Dataget();
-        detail.setText(Career);
-        detail.append(code);
-        detail.append(date);
 
         backbtn.setOnClickListener(new View.OnClickListener(){
 
@@ -101,9 +128,7 @@ public class showlist extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 check_status = position;
-                detail.setText(name.get(position) + sex.get(position));
                 detail.setText(mix.get(position));
-                statusnum = num.get(position);
             }
         });
 
@@ -113,7 +138,7 @@ public class showlist extends AppCompatActivity {
                 if(check_status != -1){
                     AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
                     aa.setTitle("確認視窗");
-                    aa.setMessage("確定刪除此訂單");
+                    aa.setMessage("確定完成此訂單?");
                     aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -174,9 +199,8 @@ public class showlist extends AppCompatActivity {
         }
         return result;
     }
-
     //catchData
-    public void Dataget() {
+    public List<Map<String, Object>> Dataget() {
         DBConnector dbConnector = new DBConnector();
         String datas = null;
         try {
@@ -189,18 +213,19 @@ public class showlist extends AppCompatActivity {
             String result = dbConnector.execute("actionadm",datas).get();
             JSONArray records = new JSONArray(result);
             for (int i = 0;i < records.length(); i++){
+                Map map = new HashMap();
                 JSONObject record = records.getJSONObject(i);
 
                 num.add(record.getString("num"));
-                time.add(record.getString("time"));
-                start.add(record.getString("start"));
-                end.add(record.getString("end"));
-                name.add(record.getString("name"));
-                sex.add(record.getString("sex"));
-                if(sex.get(i).equals("0"))
-                    sex.set(i,"先生");
-                else
-                    sex.set(i,"小姐");
+
+                map.put("time",record.getString("time")); //時間
+                map.put("start",record.getString("start")); //起站
+                map.put("end",record.getString("end")); //終站
+                if(record.getString("sex").equals("0")){
+                    map.put("client",record.getString("name") + "  先生"); //名字
+                }else {
+                    map.put("client",record.getString("name") + "  小姐"); //名字
+                }
 
                 wheel.add(record.getString("wheel"));
                 if(wheel.get(i).equals("1"))
@@ -238,10 +263,10 @@ public class showlist extends AppCompatActivity {
                 else
                     seat.set(i,"");
 
-                titlemix.add(format(time.get(i),4) + " " + format(start.get(i),4) + " " + format(end.get(i),4) + " " + format(name.get(i),4) + " " + sex.get(i));
                 mix.add(wheel.get(i) + crutch.get(i) + board.get(i) + travelhelp.get(i) + notice.get(i) + seat.get(i));
-
+                titlemix.add(map);
             }
+            return titlemix;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -251,9 +276,7 @@ public class showlist extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        adapter = new ArrayAdapter(showlist.this, android.R.layout.simple_list_item_1,titlemix);
-        record.setAdapter(adapter);
+        return titlemix;
     }
 
     public void statuscheck() {
@@ -263,23 +286,19 @@ public class showlist extends AppCompatActivity {
             datas = URLEncoder.encode("key","UTF8")
                     + "=" + URLEncoder.encode("statuscheck","UTF8");
             datas += "&" + URLEncoder.encode("num", "UTF-8")
-                    + "=" + URLEncoder.encode(statusnum, "UTF-8");
+                    + "=" + URLEncoder.encode(num.get(check_status), "UTF-8");
             String result = dbConnector.execute("actionadm",datas).get();
 
             JSONObject record = new JSONObject(result);
 
                 if (record.getString("code").equals("1")) {
-                    start.remove(check_status);
-                    end.remove(check_status);
-                    name.remove(check_status);
-                    sex.remove(check_status);
+                    num.remove(check_status);
                     wheel.remove(check_status);
                     crutch.remove(check_status);
                     board.remove(check_status);
                     travelhelp.remove(check_status);
                     notice.remove(check_status);
                     seat.remove(check_status);
-                    time.remove(check_status);
                     titlemix.remove(check_status);
                     mix.remove(check_status);
                     adapter.notifyDataSetChanged();
@@ -289,7 +308,6 @@ public class showlist extends AppCompatActivity {
                     Toast tosat = Toast.makeText(showlist.this, "Error!", Toast.LENGTH_SHORT);
                     tosat.show();
                 }
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -300,14 +318,6 @@ public class showlist extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    private String format(String x, int y) {
-        String s = "" + x;
-        while (s.length() <= y){
-            s = "  " + s;
-        }
-        return s;
-    }
     public void backpage() {
         Intent intent = new Intent(this,code.class);
         startActivity(intent);
@@ -315,12 +325,28 @@ public class showlist extends AppCompatActivity {
         name.edit().putString(code,"");
         finish();
     }
-
     public void backpage1() {
         Intent intent = new Intent(this,station.class);
         startActivity(intent);
         SharedPreferences name = getSharedPreferences(code,MODE_PRIVATE);
         name.edit().putString(code,"");
         finish();
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if(keyCode == KeyEvent.KEYCODE_BACK){
+                if(Career.equals("train")){
+                    Intent myIntent = new Intent();
+                    myIntent = new Intent(showlist.this,code.class);
+                    startActivity(myIntent);
+                    this.finish();
+                }else{
+                    Intent myIntent = new Intent();
+                    myIntent = new Intent(showlist.this,station.class);
+                    startActivity(myIntent);
+                    this.finish();
+                }
+            }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

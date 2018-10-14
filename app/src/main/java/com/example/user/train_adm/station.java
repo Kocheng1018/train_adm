@@ -27,6 +27,14 @@ public class station extends AppCompatActivity {
         block = findViewById(R.id.block);
         station = findViewById(R.id.station);
 
+        ArrayAdapter taiwamblock = new ArrayAdapter(station.this,R.layout.view2content,getResources().getStringArray(R.array.list));
+        block.setAdapter(taiwamblock);
+
+        SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
+        String localation = name.getString("block","0");
+        block.setSelection(Integer.valueOf(localation));
+        final String code = name.getString("code","0");
+
         block.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -34,6 +42,13 @@ public class station extends AppCompatActivity {
                 int index = 0; //預設spinner位址
                 ArrayAdapter location = change(pos);
                 station.setAdapter(location);
+                for(int i = 0;i < location.getCount();i++){
+                    if(location.getItem(i).equals(code)){
+                        index = i;
+                        break;
+                    }
+                }
+                station.setSelection(index);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -44,6 +59,7 @@ public class station extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
                 name.edit().putString("code", station.getSelectedItem().toString()).commit();
+                name.edit().putString("block",String.valueOf(block.getSelectedItemPosition())).commit();
                 pagedowm();
             }
         });
@@ -63,26 +79,27 @@ public class station extends AppCompatActivity {
     public ArrayAdapter change(int pos){
         switch (pos) {
             case 0:
+
                 ArrayAdapter location = new ArrayAdapter(station.this,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        R.layout.view2content,
                         getResources().getStringArray(R.array.north));
                 return location;
 
             case 1:
                 ArrayAdapter location1 = new ArrayAdapter(station.this,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        R.layout.view2content,
                         getResources().getStringArray(R.array.middle));
                 return location1;
 
             case 2:
                 ArrayAdapter location2 = new ArrayAdapter(station.this,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        R.layout.view2content,
                         getResources().getStringArray(R.array.south));
                 return location2;
 
             case 3:
                 ArrayAdapter location3 = new ArrayAdapter(station.this,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        R.layout.view2content,
                         getResources().getStringArray(R.array.east));
                 return location3;
         }
@@ -92,6 +109,7 @@ public class station extends AppCompatActivity {
     public void pagedowm() {
         Intent intent = new Intent(this,showlist.class);
         startActivity(intent);
+        finish();
     }
 
     public void backpage() {
