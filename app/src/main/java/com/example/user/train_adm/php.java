@@ -20,9 +20,15 @@ public class php extends AppCompatActivity {
         back = findViewById(R.id.back);
         wb = findViewById(R.id.html);
 
+<<<<<<< HEAD
         back.setOnClickListener(new OnMultiClickListener() {
             @Override
             public void onMultiClick(View v) {
+=======
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
                 Intent intent = new Intent();   //intent實體化
                 intent.setClass(php.this, choose.class);
                 startActivity(intent);    //startActivity觸發換頁
@@ -33,6 +39,7 @@ public class php extends AppCompatActivity {
         wb.setWebViewClient(new WebViewClient()); //不調用系統瀏覽器
         wb.loadUrl("http://163.17.136.194/lunchparty/ibus/index.php");
     }
+<<<<<<< HEAD
 
     public abstract class OnMultiClickListener implements View.OnClickListener{
         // 两次点击按钮之间的点击间隔不能少于1500毫秒
@@ -50,6 +57,8 @@ public class php extends AppCompatActivity {
         }
     }
 
+=======
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Intent myIntent = new Intent();

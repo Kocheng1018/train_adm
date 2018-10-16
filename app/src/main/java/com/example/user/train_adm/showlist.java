@@ -42,7 +42,11 @@ import java.util.concurrent.ExecutionException;
 public class showlist extends AppCompatActivity {
 
     private static int check_status = -1;
+<<<<<<< HEAD
     NetworkInfo mNetworkInfo;
+=======
+
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
     List<String> wheel = new ArrayList<>();
     List<String> crutch  = new ArrayList<>();
     List<String> board = new ArrayList<>();
@@ -86,6 +90,8 @@ public class showlist extends AppCompatActivity {
             key = "catchstation";
             code = getSharedPreferences("name",MODE_PRIVATE)
                     .getString("code", "");
+<<<<<<< HEAD
+=======
         }
         adapter = new SimpleAdapter(this,Dataget(),
                 R.layout.db_service,
@@ -114,7 +120,41 @@ public class showlist extends AppCompatActivity {
                                     }
                                 }
                             }).show().setCancelable(false);
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
         }
+        adapter = new SimpleAdapter(this,Dataget(),
+                R.layout.db_service,
+                new String[] {"time","start","end","client"},
+                new int[] {R.id.time,R.id.start,R.id.end,R.id.client});
+        record.setAdapter(adapter);
+
+<<<<<<< HEAD
+        if(num.size() == 0){
+            new AlertDialog.Builder(showlist.this)
+                    .setTitle("確認視窗")
+                    .setMessage("無服務需求!")
+                    .setPositiveButton("確定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,int which) {
+                                    if(Career.equals("train")){
+                                        Intent myIntent = new Intent();
+                                        myIntent = new Intent(showlist.this,code.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                    }else{
+                                        Intent myIntent = new Intent();
+                                        myIntent = new Intent(showlist.this,station.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                    }
+                                }
+                            }).show().setCancelable(false);
+        }
+=======
+
+        backbtn.setOnClickListener(new View.OnClickListener(){
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
 
         backbtn.setOnClickListener(new OnMultiClickListener(){
             @Override
@@ -136,6 +176,7 @@ public class showlist extends AppCompatActivity {
 
         status.setOnClickListener(new OnMultiClickListener() {
             @Override
+<<<<<<< HEAD
             public void onMultiClick(View v) {
                 mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
                 if (mNetworkInfo != null) {
@@ -169,6 +210,29 @@ public class showlist extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog,int which) {
                                         }
                                     }).show();
+=======
+            public void onClick(View v) {
+                if(check_status != -1){
+                    AlertDialog.Builder aa = new AlertDialog.Builder(showlist.this);
+                    aa.setTitle("確認視窗");
+                    aa.setMessage("確定完成此訂單?");
+                    aa.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            statuscheck();
+                        }
+                    });
+                    aa.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    aa.show();
+                }else {
+                    Toast toast = Toast.makeText(showlist.this, "請點選訂單", Toast.LENGTH_LONG);
+                    toast.show();
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
                 }
             }
 
@@ -363,6 +427,7 @@ public class showlist extends AppCompatActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+<<<<<<< HEAD
     public abstract class OnMultiClickListener implements View.OnClickListener{
         private static final int MIN_CLICK_DELAY_TIME = 1500;
         private long lastClickTime;
@@ -376,4 +441,6 @@ public class showlist extends AppCompatActivity {
             }
         }
     }
+=======
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
 }

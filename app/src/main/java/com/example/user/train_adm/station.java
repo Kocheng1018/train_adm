@@ -63,6 +63,7 @@ public class station extends AppCompatActivity {
         });
         next.setOnClickListener(new OnMultiClickListener() {
             @Override
+<<<<<<< HEAD
             public void onMultiClick(View v) {
                 mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
                 if(mNetworkInfo != null) {
@@ -81,6 +82,13 @@ public class station extends AppCompatActivity {
                                         }
                                     }).show();
                 }
+=======
+            public void onClick(View v) {
+                SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
+                name.edit().putString("code", station.getSelectedItem().toString()).commit();
+                name.edit().putString("block",String.valueOf(block.getSelectedItemPosition())).commit();
+                pagedowm();
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
             }
         });
 

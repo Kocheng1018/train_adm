@@ -1,7 +1,10 @@
 package com.example.user.train_adm;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.content.DialogInterface;
+=======
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -45,6 +48,7 @@ public class code extends AppCompatActivity {
         SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
         String coco = name.getString("train_code","");
         codein.setText(coco);
+<<<<<<< HEAD
         search.setOnClickListener(new OnMultiClickListener() {
             @Override
             public void onMultiClick(View v) {
@@ -68,6 +72,19 @@ public class code extends AppCompatActivity {
                                         }
                                     }).show();
                 }
+=======
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences name = getSharedPreferences("name", MODE_PRIVATE);
+                name.edit().putString("train_code",codein.getText().toString()).commit();
+                if(!(codein.getText().toString().equals(""))){
+                    pagedowm();
+                }else{
+                    Toast.makeText(code.this,"請輸入班次!!", Toast.LENGTH_SHORT).show();
+                }
+
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
             }
         });
         pageup.setOnClickListener(new OnMultiClickListener() {
@@ -88,6 +105,10 @@ public class code extends AppCompatActivity {
             startActivity(intent);
             finish();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Intent myIntent = new Intent();
@@ -132,6 +153,7 @@ public class code extends AppCompatActivity {
         }
         return false;
     }
+<<<<<<< HEAD
     public abstract class OnMultiClickListener implements View.OnClickListener{
         private static final int MIN_CLICK_DELAY_TIME = 1500;
         private long lastClickTime;
@@ -145,4 +167,6 @@ public class code extends AppCompatActivity {
             }
         }
     }
+=======
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
 }
