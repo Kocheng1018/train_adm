@@ -20,7 +20,16 @@ public class choose extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
 
+<<<<<<< HEAD
         final ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+=======
+<<<<<<< HEAD
+        final ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+=======
+        Button trainbtn,stationbtn,htmlbtn;
+
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
+>>>>>>> d9260aaea814d07176238938eb11a9fc76d13ddb
         trainbtn = findViewById(R.id.trainbtn);
         stationbtn = findViewById(R.id.stationbtn);
         htmlbtn = findViewById(R.id.html);
@@ -61,6 +70,18 @@ public class choose extends AppCompatActivity {
                                         }
                                     }).show();
                 }
+<<<<<<< HEAD
+=======
+            }
+        });
+        htmlbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();   //intent實體化
+                intent.setClass(choose.this, php.class);
+                startActivity(intent);    //startActivity觸發換頁
+                finish();
+>>>>>>> d9260aaea814d07176238938eb11a9fc76d13ddb
             }
         });
     }

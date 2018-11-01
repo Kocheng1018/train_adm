@@ -19,7 +19,15 @@
         android:layout_marginTop="8dp"
         android:background="#fefdca"
         android:paddingTop="8dp"
+<<<<<<< HEAD
         android:text="    時間      起站     迄站      服務對象    "
+=======
+<<<<<<< HEAD
+        android:text="    時間      起站     迄站      服務對象    "
+=======
+        android:text="   時間      起站     迄站      服務對象    "
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
+>>>>>>> d9260aaea814d07176238938eb11a9fc76d13ddb
         android:textAllCaps="false"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -100,8 +108,16 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/editsignup"
+<<<<<<< HEAD
         android:text="完成服務"
         android:textSize="18sp"
+=======
+        android:text="完成訂單"
+<<<<<<< HEAD
+        android:textSize="18sp"
+=======
+>>>>>>> ad62006ae9c37db108928c62f2c4e301a89ca42b
+>>>>>>> d9260aaea814d07176238938eb11a9fc76d13ddb
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backbtn"
